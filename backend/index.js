@@ -8,6 +8,7 @@ app.use((req, res, next) => {
   next();
 })
 
+
 // ✅ Connect to MongoDB
 mongoDB();
  
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 app.use(express.json())
 
 app.use('/api',require('./Routes/CreateUser'))
+app.use('/api',require('./Routes/DisplayData'))
 
 // ✅ Start Server
 app.listen(port, () => {

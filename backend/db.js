@@ -12,12 +12,23 @@ const mongoDB = async () => {
 
     console.log("✅ Connected to MongoDB successfully");
 
-    // Fetch data from "food_items" collection
-    const fetched_data = mongoose.connection.db.collection("food_items");
-    const data = await fetched_data.find({}).toArray();
-    
-   /* console.log("🍽️ Food Items:", data);*/
+    // Fetch food_items
+    const foodItemsCollection = mongoose.connection.db.collection("food_items");
+    const foodItems = await foodItemsCollection.find({}).toArray();
 
+    if (foodItems.length > 0) {
+      // Nested fetch: Only get categories if items exist
+      const foodCategoryCollection = mongoose.connection.db.collection("foodCategory");
+      const foodCategories = await foodCategoryCollection.find({}).toArray();
+
+      // Set globals inside the scope of food_items
+      global.food_items = foodItems;
+      global.foodCategory = foodCategories;
+
+      console.log("✅ food_items and foodCategory loaded into globals");
+    } else {
+      console.warn("⚠️ No food items found in the database.");
+    }
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
   }
